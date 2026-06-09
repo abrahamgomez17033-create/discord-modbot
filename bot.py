@@ -1,14 +1,28 @@
+import os
 import discord
 from discord.ext import commands
 import config
 import database as db
 import asyncio
+from aiohttp import web
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
 bot = commands.Bot(command_prefix=config.PREFIX, intents=intents, help_command=None)
+
+async def healthcheck(request):
+    return web.Response(text="ok")
+
+async def run_http():
+    app = web.Application()
+    app.router.add_get("/", healthcheck)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.getenv("PORT", 10000))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
 
 @bot.event
 async def on_ready():
@@ -42,6 +56,7 @@ async def help(ctx):
     await ctx.send(embed=embed)
 
 async def main():
+    await run_http()
     async with bot:
         bot.config = config
         await bot.load_extension("cogs.moderation")
