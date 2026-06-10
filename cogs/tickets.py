@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import config
 
 class Tickets(commands.Cog):
     def __init__(self, bot):
@@ -31,6 +30,7 @@ class Tickets(commands.Cog):
             if not member:
                 return
 
+            config = self.bot.config
             category = discord.utils.get(guild.categories, name=config.TICKET_CATEGORY_NAME)
             if not category:
                 category = await guild.create_category(config.TICKET_CATEGORY_NAME)

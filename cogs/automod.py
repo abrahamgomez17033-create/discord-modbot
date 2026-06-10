@@ -10,6 +10,11 @@ class AutoMod(commands.Cog):
         self.invite_whitelist = set()
         self.mention_limit = 5
         self.spam_cache = {}
+        self._load_config()
+
+    def _load_config(self):
+        cfg = self.bot.config
+        self.mention_limit = getattr(cfg, "MENTION_LIMIT", 5)
 
     @commands.Cog.listener()
     async def on_message(self, msg):

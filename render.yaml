@@ -2,5 +2,21 @@ services:
   - type: worker
     name: modbot
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: python bot.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: TOKEN
+        sync: false
+      - key: PREFIX
+        value: "!"
+      - key: MUTE_ROLE_NAME
+        value: "Muted"
+      - key: TICKET_CATEGORY_NAME
+        value: "Tickets"
+      - key: STAFF_ROLES
+        value: "Admin,Mod,Staff"
+    healthCheckPath: /health
+    autoDeploy: true
